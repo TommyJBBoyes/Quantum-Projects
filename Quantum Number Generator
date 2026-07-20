@@ -1,0 +1,54 @@
+pip install qiskit qiskit-aer
+from qiskit import QuantumCircuit
+from qiskit_aer import AerSimulator
+
+def quantum_random_bit():
+    # Create a quantum circuit with 1 qubit and 1 classical bit
+    qc = QuantumCircuit(1, 1)
+
+    # Put the qubit into superposition
+    qc.h(0)
+
+    # Measure the qubit
+    qc.measure(0, 0)
+
+    # Simulate the quantum circuit
+    simulator = AerSimulator()
+    job = simulator.run(qc, shots=1)
+
+    # Get the result
+    result = job.result()
+    counts = result.get_counts()
+
+    # Return the measured bit
+    return list(counts.keys())[0]
+
+
+def quantum_random_binary(length):
+    return "".join(quantum_random_bit() for _ in range(length))
+
+
+def quantum_random_int(bits):
+    binary = quantum_random_binary(bits)
+    return int(binary, 2)
+
+
+def main():
+    print("=" * 40)
+    print(" Quantum Random Number Generator")
+    print("=" * 40)
+
+    bits = quantum_random_binary(16)
+
+    print(f"\nRandom 16-bit binary:")
+    print(bits)
+
+    print(f"\nDecimal:")
+    print(int(bits, 2))
+
+    print(f"\n8-bit random integer:")
+    print(quantum_random_int(8))
+
+
+if __name__ == "__main__":
+    main()
